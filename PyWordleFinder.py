@@ -86,16 +86,3 @@ class WordleFinder:
 
     def set_must_have_letters(self, *args):
         self.must_have_letters = args
-
-
-word = WordleFinder()
-word.set_must_have_letters('y')
-print(word.get_word())
-#{'Wendy', 'beady', 'diety', 'heady', 'edify', 'Ryder', 'Teddy', 'reedy', 'deity', 'ready', 'decry', 'decay', 'Clyde', 'decoy', 'yield', 'seedy', 'yodel', 'derby', 'deify', 'delay', 'weedy', 'needy'}
-
-word.set_letter_position('w', 1)
-#{'washy', 'worry', 'wishy', 'woody', 'warty', 'witty', 'wordy', 'weary', 'weedy', 'withy', 'wacky', 'wally', 'windy', 'wispy', 'wormy'}
-
-word.set_letter_position('l', 3)
-#{'wally'}
-print(word.get_word())
