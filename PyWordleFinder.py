@@ -7,6 +7,7 @@ class WordleFinder:
         self.containing_letters = {i: None for i in range(5)}
         self.words_for_each_position = {i: [] for i in range(5)}
         self.possible_words = set()
+        self.possible_positional_words = set()
         self.word_length = word_length
         self.bad_characters = []
         self.must_have_letters = []
@@ -19,6 +20,7 @@ class WordleFinder:
         :param position: the position of the letter in the work
         :return: None
         """
+        self.possible_words = set()
         rtn_lst = []
         position -= 1
         for word in english_words_set:
@@ -37,6 +39,8 @@ class WordleFinder:
         self._get_possible_words_from_position()
         if not self._check_position_list_empty():
             self.possible_words = self.words_for_must_have_letters.intersection(self.possible_words)
+        elif not self.containing_letters:
+            self.possible_words = self._get_possible_words_from_position()
         else:
             self.possible_words = self.words_for_must_have_letters
         self.remove_characters()
@@ -47,11 +51,11 @@ class WordleFinder:
         Finds all words that match the positional instances attributes in self.words_for_each_position
         :return: Set of possible Wordles
         """
-        self.possible_words = set(list(self.words_for_each_position.values())[0])
+        self.possible_positional_words = set(list(self.words_for_each_position.values())[0])
         for s in list(self.words_for_each_position.values())[1:]:
             if s:
-                self.possible_words.intersection_update(s)
-        return self.possible_words
+                self.possible_positional_words.intersection_update(s)
+        return self.possible_positional_words
 
     def _check_position_list_empty(self):
         """
@@ -79,6 +83,7 @@ class WordleFinder:
     def get_must_have_letters_words(self):
         for word in english_words_set:
             if all([letter in word and len(word) == self.word_length for letter in self.must_have_letters]):
+                self.possible_words = set()
                 self.words_for_must_have_letters.add(word)
 
     def set_remove_characters(self, *args):
