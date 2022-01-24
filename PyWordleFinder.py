@@ -2,87 +2,85 @@ from english_words import english_words_set
 
 
 class WordleFinder:
-    def __init__(self, word_length=5):
-        self.starting_letter = ''
-        self.containing_letters = {i: None for i in range(5)}
-        self.words_for_each_position = {i: [] for i in range(5)}
-        self.possible_words = set()
-        self.word_length = word_length
-        self.bad_characters = []
-        self.must_have_letters = []
-        self.words_for_must_have_letters = set()
+    def __init__(self):
+        self.all_words = self._get_all_words_with_length()
 
-    def set_letter_position(self, letter: str, position: int) -> None:
+    @staticmethod
+    def _get_all_words_with_length(length=5) -> set:
         """
-        Used to set a known letter position.
-        :param letter: the letter
-        :param position: the position of the letter in the work
-        :return: None
+        Gets all the english words with the specified length
+        :param length:
+        :return: set
         """
-        rtn_lst = []
-        position -= 1
+        _temp = set()
         for word in english_words_set:
-            if len(word) == self.word_length:
-                if letter == word[position]:
-                    rtn_lst.append(word)
-        self.words_for_each_position[position] = rtn_lst
+            if len(word) == length:
+                _temp.add(word)
+        return _temp
 
-    def get_word(self) -> set:
+    def get_word(self):
         """
-        Returns the possible wordle based on known letters with position, known letters without position
-        and known excluded letters.
-        :return: Set of possible Wordles
-        """
-        self.get_must_have_letters_words()
-        self._get_possible_words_from_position()
-        if not self._check_position_list_empty():
-            self.possible_words = self.words_for_must_have_letters.intersection(self.possible_words)
-        else:
-            self.possible_words = self.words_for_must_have_letters
-        self.remove_characters()
-        return self.possible_words
-
-    def _get_possible_words_from_position(self):
-        """
-        Finds all words that match the positional instances attributes in self.words_for_each_position
-        :return: Set of possible Wordles
-        """
-        self.possible_words = set(list(self.words_for_each_position.values())[0])
-        for s in list(self.words_for_each_position.values())[1:]:
-            if s:
-                self.possible_words.intersection_update(s)
-        return self.possible_words
-
-    def _check_position_list_empty(self):
-        """
-        Returns True if the position list is empty.
-        :return: None
-        """
-        for i in self.words_for_each_position.values():
-            if i:
-                return False
-            else:
-                return True
-
-    def remove_characters(self):
-        """
-        Used to eliminate words that include known unused characters.
+        Used to return all the words based on criteria
         :return:
         """
-        _temp = self.possible_words.copy()
-        for character in self.bad_characters:
-            for word in self.possible_words:
-                if character in word:
-                    _temp.remove(word)
-        self.possible_words = _temp
+        print(self.all_words)
+        return self.all_words
 
-    def get_must_have_letters_words(self):
-        for word in english_words_set:
-            if all([letter in word and len(word) == self.word_length for letter in self.must_have_letters]):
-                self.words_for_must_have_letters.add(word)
+    def set_value(self, letter, position=None) -> None:
+        """
+        Used to set known letters and their positions. A position can be passed or not
+        :param letter: a known included letter
+        :param position: (optional) a known position of the letter
+        :return: None
+        """
+        _temp = self.all_words.copy()
+        for word in _temp:
+            if position:
+                if word[position - 1] != letter:
+                    if word in self.all_words:
+                        self.all_words.remove(word)
+            else:
+                if letter not in word:
+                    self.all_words.remove(word)
 
-    def set_remove_characters(self, *args):
-        self.bad_characters = args
+    def remove_letters(self, *args) -> None:
+        """
+        Used to remove letters from possible words
+        :param args: letters you want to remove as str
+        :return: None
+        """
+        _temp = self.all_words.copy()
+        for word in _temp:
+            for letter in args:
+                if letter in word:
+                    if word in self.all_words:
+                        self.all_words.remove(word)
 
-    def set_must_have_letters(self, *args):
-        self.must_have_letters = args
+    def remove_letters_position(self, letter, position) -> None:
+        """
+        Used to remove a letter from a position but not if the letter is somewhere else in the word
+        :param letter: Letter to remove from position
+        :param position: Position to remove the letter from
+        :return: None
+        """
+        _temp = self.all_words.copy()
+        for word in _temp:
+            if letter in word[position - 1]:
+                if word in self.all_words:
+                    self.all_words.remove(word)
+
+
+###########
+word = WordleFinder()
+word.set_value('e', 2)
+word.set_value('a', 3)
+word.set_value('r', 4)
+word.get_word()
+{'yearn', 'weary', 'pearl', 'learn', 'heart', 'beard', 'heard'}
+word.set_value('e')
+word.remove_letters_position('a', 1)
+word.remove_letters_position('e', 4)
+word.remove_letters_position('e', 5)
+word.remove_letters('d', 'i', 'u', 'n', 'l')
+word.get_word()
+{'weary', 'heart'}
