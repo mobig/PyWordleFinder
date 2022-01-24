@@ -5,17 +5,21 @@ Python Class to Find the Wordle of the day.
 ## Usage/Examples
 ```python
 >> word = WordleFinder()
->> word.set_must_have_letters('y')
->> print(word.get_word())
-#{'Wendy', 'beady', 'diety', 'heady', 'edify', 'Ryder', 'Teddy', 'reedy', 'deity', 'ready', 'decry', 'decay', 'Clyde', 'decoy', 'yield', 'seedy', 'yodel', 'derby', 'deify', 'delay', 'weedy', 'needy'}
+>> word.set_value('e', 2)
+>> word.set_value('a', 3)
+>> word.set_value('r', 4)
+>> word.get_word()
 
->> word.set_letter_position('w', 1)
->> print(word.get_word())
-#{'washy', 'worry', 'wishy', 'woody', 'warty', 'witty', 'wordy', 'weary', 'weedy', 'withy', 'wacky', 'wally', 'windy', 'wispy', 'wormy'}
+{'yearn', 'weary', 'pearl', 'learn', 'heart', 'beard', 'heard'}
 
->> word.set_letter_position('l', 3)
->> print(word.get_word())
-#{'wally'}
+>> word.set_value('e')
+>> word.remove_letters_position('a', 1)
+>> word.remove_letters_position('e', 4)
+>> word.remove_letters_position('e', 5)
+>> word.remove_letters('d', 'i', 'u', 'n', 'l')
+>> word.get_word()
+
+{'weary', 'heart'}
 ```
 
 ## Dependencies
